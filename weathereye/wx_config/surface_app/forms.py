@@ -11,7 +11,7 @@ class SurfaceConfigurationForm(forms.Form):
             self.fields['host'] = forms.CharField(
                 label="Remote Host for SURFACE install:", 
                 required=True, 
-                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'eg.. xxx.xx.xxx.xx@username'})
+                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'eg.. username@xxx.xx.xxx.xx'})
             )
             self.fields['surface_repo_path'] = forms.CharField(
                 label="Path on remote machine to clone SURFACE repository:", 
