@@ -32,9 +32,9 @@
       ignore_errors: true
       no_log: true
       register: result
-      failed_when: result.status == 'xxx' # if task returns a code that != 200, fail status not shown
+      failed_when: result.status == 'xxx' # Prevents the task from being marked as failed (red output) by using a condition that will never be met. This ensures the task always appears successful (green), even if it fails internally, and the error is ignored.
 
-  # downloading redis and pip on mac machines
+  # downloading redis on mac machines
     - name: Install required packages (MacOSX)
       community.general.homebrew:
         name: redis
@@ -43,7 +43,7 @@
       when: ansible_distribution in ['MacOSX']
       become: false
 
-  # downloading redis and pip on ubuntu machines
+  # downloading redis and sshpass on ubuntu machines
     - name: Update apt cache
       apt:
         update_cache: true
