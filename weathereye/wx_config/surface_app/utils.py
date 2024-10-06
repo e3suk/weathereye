@@ -85,7 +85,7 @@ def write_out_surface_variables(form):
 
             # SETUP LRGS installation information
             # writing to variable file path to LRGSClient folder and other neccessary files (on the machine recieving SURFACE)
-            LRGSClient_path = os.path.join(str(form.cleaned_data['surface_repo_path'].strip()), 'surface', 'api', 'LRGSClient',)
+            LRGSClient_path = os.path.join(str(form.cleaned_data['surface_repo_path'].strip()), 'surface', 'api', 'LrgsClient',)
             lrgs_decj = os.path.join(LRGSClient_path, 'bin', 'decj',)
             lrgs_getDcpMessages = os.path.join(LRGSClient_path, 'bin', 'getDcpMessages',)
             lrgs_msgaccess = os.path.join(LRGSClient_path, 'bin', 'msgaccess',)
