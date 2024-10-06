@@ -16,7 +16,7 @@ sudo_password_file_path = os.path.join(project_dir, 'env', 'become_password')
 # path to sudo password used for local installs
 local_sudo_password_path = os.path.join(os.path.dirname(django_app_dir ),'wx_playbook', 'env', 'become_password')
 
-# path to surface variables file
+# path to surface variables file (for user in the playbooks)
 variable_file_path = os.path.join(project_dir, 'env', 'extravars',)
 
 # path to production.env file
@@ -24,6 +24,12 @@ prod_env_file_path = os.path.join(project_dir, 'env', 'production.env',)
 
 # path to remote hosts path
 hosts_file_path = os.path.join(project_dir, 'inventory', 'hosts')
+
+# path to lrgs install jar file
+lrgs_install_jar = os.path.join(project_dir, 'env', 'lrgs', 'lrgs-client-install-6-2-RC03.jar',)
+
+# path lrgs installation script
+lrgs_installation_script = os.path.join(project_dir, 'env', 'lrgs', 'LRGS-installation-script',)
 
 
 def replace_text_in_file(file_path, search_text, replace_text):
@@ -42,6 +48,7 @@ def replace_text_in_file(file_path, search_text, replace_text):
         pass
 
 
+# mainly for use in the playbook execution
 def write_out_surface_variables(form):
     # write out surface variables
     with open(variable_file_path, 'w') as vf:
@@ -67,6 +74,35 @@ def write_out_surface_variables(form):
         vf.write(f'"admin_password": "{form.cleaned_data["admin_password"]}"\n')
         # path to production.env file
         vf.write(f'"prod_env_path": "{prod_env_file_path}"\n')
+
+        # writing a variable called enable_lrgs as true if the user entered appropriate LRGS details
+        lrgs_input_username = str(form.cleaned_data["lrgs_user"].strip())
+        lrgs_input_password = str(form.cleaned_data["lrgs_password"].strip())
+
+        # check if the user entered a value for LRGS username and password 
+        if lrgs_input_password and lrgs_input_username:
+            vf.write('"enable_lrgs": "true"\n')
+
+            # SETUP LRGS installation information
+            # writing to variable file path to LRGSClient folder and other neccessary files (on the machine recieving SURFACE)
+            LRGSClient_path = os.path.join(str(form.cleaned_data['surface_repo_path'].strip()), 'surface', 'api', 'LRGSClient',)
+            lrgs_decj = os.path.join(LRGSClient_path, 'bin', 'decj',)
+            lrgs_getDcpMessages = os.path.join(LRGSClient_path, 'bin', 'getDcpMessages',)
+            lrgs_msgaccess = os.path.join(LRGSClient_path, 'bin', 'msgaccess',)
+            lrgs_rtstat = os.path.join(LRGSClient_path, 'bin', 'rtstat',)
+
+            vf.write(f'"LRGSClient_path": "{LRGSClient_path}"\n')
+            vf.write(f'"lrgs_decj": "{lrgs_decj}"\n')
+            vf.write(f'"lrgs_getDcpMessages": "{lrgs_getDcpMessages}"\n')
+            vf.write(f'"lrgs_msgaccess": "{lrgs_msgaccess}"\n')
+            vf.write(f'"lrgs_rtstat": "{lrgs_rtstat}"\n')
+
+            # writing the path to the lrgs  .jar file and the installation script on the host machine
+            vf.write(f'"lrgs_install_jar": "{lrgs_install_jar}"\n')
+            vf.write(f'"lrgs_installation_script": "{lrgs_installation_script}"\n')
+
+        else:
+            vf.write('"enable_lrgs": "false"\n')
 
 
 def write_out_production_variables(form):

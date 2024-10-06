@@ -66,12 +66,12 @@ class SurfaceConfigurationForm(forms.Form):
     # New form fields
     lrgs_user = forms.CharField(
         label="LRGS User:", 
-        required=True, 
+        required=False, 
         widget=forms.TextInput(attrs={'class': 'form-control',})
     )
     lrgs_password = forms.CharField(
         label="LRGS Password:", 
-        required=True, 
+        required=False, 
         widget=forms.PasswordInput(attrs={'class': 'form-control',})
     )
     timezone_name = forms.CharField(

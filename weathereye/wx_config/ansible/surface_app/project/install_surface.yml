@@ -25,6 +25,7 @@
             - virtualenv
             - git
             - python3-setuptools
+            - openjdk-11-jdk
           state: latest
         become: false
 
@@ -93,7 +94,7 @@
 
       - name: Ensure static directory permissions are correct
         ansible.builtin.command:
-          cmd: chmod -R a+rwx "{{ surface_repo_path }}/api/static"
+          cmd: chmod -R a+rwx "{{ surface_repo_path }}api/static"
         become: false
 
       - name: Ensure pip version is less than 24.1 in Dockerfile
@@ -168,6 +169,88 @@
           project_src: "{{ surface_repo_path }}"
           state: stopped
         become: false
+
+
+
+
+      # LRGS SETUP
+      - name: LRGS setup
+        block:
+          # copy the neccessary files
+          - name: Copy lrgs install .jar file
+            ansible.builtin.copy:
+              src: "{{ lrgs_install_jar }}"
+              dest: "{{ surface_repo_path }}"
+
+          - name: Copy lrgs installation script
+            ansible.builtin.copy:
+              src: "{{ lrgs_installation_script }}"
+              dest: "{{ surface_repo_path }}"  
+
+          # modify the installation script
+          - name: Ensure correct LRGS install location is set
+            ansible.builtin.replace:
+              path: "{{ surface_repo_path }}LRGS-installation-script"
+              regexp: '#PATH-TO-LRGSCLIENT-FOLDER'
+              replace: "{{ LRGSClient_path }}"
+
+          # ensure that the LRGSClient folder has the correct permissions
+          - name: Ensure LRGSClient directory permissions are correct
+            ansible.builtin.command:
+              cmd: chmod -R a+rwx "{{ LRGSClient_path }}"
+            become: false
+
+          # install LRGS client
+          - name: Install LRGS Client
+            ansible.builtin.shell: java -jar lrgs-client-install-6-2-RC03.jar LRGS-installation-script
+            args:
+              chdir: "{{ surface_repo_path }}"
+
+          # modify the decj file in the LRGS Client
+          - name: Modify decj file in LRGS Client
+            ansible.builtin.replace:
+              path: "{{ lrgs_decj }}"
+              regexp: '/api'
+              replace: ''
+
+          # modify the getDcpMessages file in the LRGS Client
+          - name: Modify getDcpMessages file in LRGS Client
+            ansible.builtin.replace:
+              path: "{{ lrgs_getDcpMessages }}"
+              regexp: '/api'
+              replace: ''
+
+          # modify the msgaccess file in the LRGS Client
+          - name: Modify msgaccess file in LRGS Client
+            ansible.builtin.replace:
+              path: "{{ lrgs_msgaccess }}"
+              regexp: '/api'
+              replace: ''
+
+          # modify the rtstat file in the LRGS Client
+          - name: Modify rtstat file in LRGS Client
+            ansible.builtin.replace:
+              path: "{{ lrgs_rtstat }}"
+              regexp: '/api'
+              replace: ''
+
+          # remove the neccessary files after use
+          - name: Remove lrgs install .jar file
+            ansible.builtin.file:
+              path: "{{ surface_repo_path }}lrgs-client-install-6-2-RC03.jar"
+              state: absent
+            become: false
+
+          - name: Remove lrgs installation script
+            ansible.builtin.file:
+              path: "{{ surface_repo_path }}LRGS-installation-script"
+              state: absent
+            become: false
+        when: enable_lrgs in ['true', 'True', 'TRUE']
+        # LRGS Setup end
+
+
+
 
       - name: Starting up SURFACE
         community.docker.docker_compose_v2:

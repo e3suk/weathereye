@@ -26,6 +26,7 @@
           - virtualenv
           - git
           - python3-setuptools
+          - openjdk-11-jdk
         state: latest
       become: true
 
@@ -82,7 +83,7 @@
     
     - name: Ensure static directory permissions are correct
       ansible.builtin.command:
-        cmd: chmod -R a+rwx "{{ surface_repo_path }}/api/static"
+        cmd: chmod -R a+rwx "{{ surface_repo_path }}api/static"
       become: true
 
 
