@@ -247,7 +247,7 @@
               state: absent
             become: false
         when: enable_lrgs in ['true', 'True', 'TRUE']
-        # LRGS Setup end
+      # LRGS Setup end
 
 
 
