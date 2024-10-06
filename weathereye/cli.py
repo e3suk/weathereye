@@ -16,7 +16,7 @@ def main(args=None):
 # WeatherEye install command group
 @main.command()
 # prompt for sudo password
-@click.option('--sudo-password', prompt=True, hide_input=True, required=True, confirmation_prompt=True, help='Sudo password to install SURFACE')
+@click.option('--sudo-password', prompt='[sudo] password', hide_input=True, required=True, confirmation_prompt=True, help='Sudo password to install required packages')
 def install(sudo_password):
     """WeatherEye install / configuration command"""
 
