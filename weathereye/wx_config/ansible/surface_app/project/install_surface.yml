@@ -80,6 +80,8 @@
           repo: https://github.com/opencdms/surface.git
           dest: "{{ surface_repo_path }}"
           force: true
+          single_branch: true
+          version: development
 
       - name: Remove example SUFACE config file (production.env.example)
         ansible.builtin.file:
@@ -96,24 +98,6 @@
         ansible.builtin.command:
           cmd: chmod -R a+rwx "{{ surface_repo_path }}api/static"
         become: false
-
-      - name: Ensure pip version is less than 24.1 in Dockerfile
-        ansible.builtin.lineinfile:
-          path: "{{ surface_repo_path }}api/Dockerfile"
-          regexp: '^RUN pip install -U pip setuptools wheel$'
-          line: 'RUN pip install -U "pip<24.1" setuptools wheel'
-
-      - name: Ensure --force-reinstall flag is added to numpy installation in Dockerfile
-        lineinfile:
-          path: "{{ surface_repo_path }}api/Dockerfile"
-          regexp: '^RUN pip install numpy==1.21.2$'
-          line: 'RUN pip install numpy==1.21.2 --force-reinstall'
-
-      - name: Ensure numpy is added to the end of requirements.txt
-        lineinfile:
-          path: "{{ surface_repo_path }}api/requirements.txt"
-          line: 'numpy==1.21.2'
-          insertafter: EOF
 
       - name: Creating and starting Docker services (This may take a while...)
         community.docker.docker_compose_v2:
