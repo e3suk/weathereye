@@ -164,13 +164,13 @@
                                 progressBar.style.backgroundColor = '#4caf50';
                                 progressBar.textContent = '100%';
                                 status.textContent = 'Installation Complete! SURFACE can now be accessed at http://0.0.0.0:8080/';
-                            } else if (progress <= 80) {
-                                percentage = Math.min(progress * 100 / 85, 100);
+                            } else if (progress <= 90) {
+                                percentage = Math.min(progress * 100 / 95, 100);
                                 progressBar.style.width = Math.floor(percentage) + '%';
                                 progressBar.textContent = Math.floor(percentage) + '%';
                                 status.textContent = 'Loading...';
                             } else {
-                                percentage = Math.min(80 * 100 / 85, 100);
+                                percentage = Math.min(90 * 100 / 95, 100);
                                 progressBar.style.width = Math.floor(percentage) + '%';
                                 progressBar.textContent = Math.floor(percentage) + '%';
                                 status.textContent = 'Loading...';
