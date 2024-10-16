@@ -229,15 +229,19 @@
     - name: Verify file permissions and ownership inside containers
       block:
         - name: Verify the data dir
-          ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface /data"
+          # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface /data"
+          ansible.builtin.shell: docker compose exec --user root api bash -c "find /data -exec chown surface {} \;"
+
           args:
             chdir: "{{ surface_repo_path }}"
 
         - name: Verify the surface dir
-          ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface:surface /surface"
+          # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface:surface /surface"
+          ansible.builtin.shell: docker compose exec --user root api bash -c "find /surface -exec chown surface:surface {} \;"
+
           args:
             chdir: "{{ surface_repo_path }}"
-      become: true
+      become: false
 
 
 
