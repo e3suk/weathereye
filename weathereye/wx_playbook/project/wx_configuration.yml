@@ -24,15 +24,46 @@
   tasks:
   # shutdown old configuration sites that may still be running
     - name: Cleanup tasks
-      ansible.builtin.uri:
-        url: http://localhost:52376/shutdown/
-        method: GET
-        force: true
-        status_code: 200
-      ignore_errors: true
-      no_log: true
-      register: result
-      failed_when: result.status == 'xxx' # Prevents the task from being marked as failed (red output) by using a condition that will never be met. This ensures the task always appears successful (green), even if it fails internally, and the error is ignored.
+      block:
+        # shutdown stale weathereye config site
+        - name: Cleanup tasks
+          ansible.builtin.uri:
+            url: http://localhost:52376/shutdown/
+            method: GET
+            force: true
+            status_code: 200
+          ignore_errors: true
+          no_log: true
+          register: result
+          failed_when: result.status == 'xxx' # Prevents the task from being marked as failed 
+                                              # (red output) by using a condition that will never be met. 
+                                              # This ensures the task always appears successful (green), 
+                                              # even if it fails internally, and the error is ignored.
+
+        # Stop celery worker
+        - name: Stop celery worker
+          ansible.builtin.shell: |
+            pgrep -f "celery -A wx_config worker" | xargs kill -SIGKILL
+          args:
+            chdir: "{{ django_webapp_path }}"
+          ignore_errors: true
+          no_log: true
+          register: celery_result
+          failed_when: celery_result.stderr == 'xxx' # Prevents the task from being marked as failed 
+                                              # (red output) by using a condition that will never be met. 
+                                              # This ensures the task always appears successful (green), 
+                                              # even if it fails internally, and the error is ignored.
+
+        # stop redis
+        - name: Stop redis
+          ansible.builtin.shell: redis-cli -p 52377 SHUTDOWN
+          ignore_errors: true
+          no_log: true
+          register: redis_result
+          failed_when: redis_result.stderr == 'xxx' # Prevents the task from being marked as failed 
+                                              # (red output) by using a condition that will never be met. 
+                                              # This ensures the task always appears successful (green), 
+                                              # even if it fails internally, and the error is ignored.
 
   # downloading redis on mac machines
     - name: Install required packages (MacOSX)
@@ -62,7 +93,7 @@
 
   # start redis
     - name: Start redis
-      ansible.builtin.shell: redis-server --port 52377
+      ansible.builtin.shell: redis-server --port 52377 --save "" --appendonly no
       async: 10800
       poll: 0
   
