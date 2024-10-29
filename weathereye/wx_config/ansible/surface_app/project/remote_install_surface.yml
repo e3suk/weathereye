@@ -225,26 +225,6 @@
 
 
 
-    # Verify file permissions and ownership
-    - name: Verify file permissions and ownership inside containers
-      block:
-        - name: Verify the data dir
-          # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface /data"
-          ansible.builtin.shell: docker compose exec --user root api bash -c "find /data -exec chown surface {} \;"
-
-          args:
-            chdir: "{{ surface_repo_path }}"
-
-        - name: Verify the surface dir
-          # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface:surface /surface"
-          ansible.builtin.shell: docker compose exec --user root api bash -c "find /surface -exec chown surface:surface {} \;"
-
-          args:
-            chdir: "{{ surface_repo_path }}"
-      become: false
-
-
-
     # Collect Static files and create admin user
     - name: Collect static files and create the SURFACE admin user
       block:
@@ -276,6 +256,25 @@
             project_src: "{{ surface_repo_path }}"
             state: present
 
+        # Verify file permissions and ownership
+        - name: Verify file permissions and ownership inside containers
+          block:
+            - name: Verify the data dir
+              # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface /data"
+              ansible.builtin.shell: docker compose exec --user root api bash -c "find /data -exec chown surface {} \;"
+
+              args:
+                chdir: "{{ surface_repo_path }}"
+
+            - name: Verify the surface dir
+              # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface:surface /surface"
+              ansible.builtin.shell: docker compose exec --user root api bash -c "find /surface -exec chown surface:surface {} \;"
+
+              args:
+                chdir: "{{ surface_repo_path }}"
+          become: true
+
+        # SURFACE installation complete
         - name: SURFACE installation complete!
           ansible.builtin.pause:
             seconds: 2
