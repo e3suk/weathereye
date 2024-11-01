@@ -145,29 +145,29 @@
         - name: Modify decj file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_decj }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient'
+            replace: 'DH=/surface/LrgsClient'
 
         # modify the getDcpMessages file in the LRGS Client
         - name: Modify getDcpMessages file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_getDcpMessages }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient/bin/decj'
+            replace: '/surface/LrgsClient/bin/decj'
 
         # modify the msgaccess file in the LRGS Client
         - name: Modify msgaccess file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_msgaccess }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient/bin/decj'
+            replace: '/surface/LrgsClient/bin/decj'
 
         # modify the rtstat file in the LRGS Client
         - name: Modify rtstat file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_rtstat }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient/bin/decj'
+            replace: '/surface/LrgsClient/bin/decj'
 
         # remove the neccessary files after use
         - name: Remove lrgs install .jar file
