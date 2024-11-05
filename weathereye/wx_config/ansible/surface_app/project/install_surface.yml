@@ -108,10 +108,10 @@
             src: "{{ prod_env_path }}"
             dest: "{{ surface_repo_path }}api/"
 
-        # - name: Ensure static directory permissions are correct
-        #   ansible.builtin.command:
-        #     cmd: chmod -R a+rwx "{{ surface_repo_path }}api/static"
-        #   become: false
+        - name: Ensure static directory permissions are correct
+          ansible.builtin.command:
+            cmd: chmod -R a+rwx "{{ surface_repo_path }}api/static"
+          become: false
 
 
 
