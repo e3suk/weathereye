@@ -94,7 +94,8 @@
             dest: "{{ surface_repo_path }}"
             force: true
             single_branch: true
-            version: development
+            # version: development
+            version: update/minor-updates
 
         - name: Remove example SUFACE config file (production.env.example)
           ansible.builtin.file:
@@ -107,10 +108,10 @@
             src: "{{ prod_env_path }}"
             dest: "{{ surface_repo_path }}api/"
 
-        # - name: Ensure static directory permissions are correct
-        #   ansible.builtin.command:
-        #     cmd: chmod -R a+rwx "{{ surface_repo_path }}api/static"
-        #   become: false
+        - name: Ensure static directory permissions are correct
+          ansible.builtin.command:
+            cmd: chmod -R a+rwx "{{ surface_repo_path }}api/static"
+          become: false
 
 
 
@@ -145,29 +146,29 @@
         - name: Modify decj file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_decj }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient'
+            replace: 'DH=/surface/LrgsClient'
 
         # modify the getDcpMessages file in the LRGS Client
         - name: Modify getDcpMessages file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_getDcpMessages }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient/bin/decj'
+            replace: '/surface/LrgsClient/bin/decj'
 
         # modify the msgaccess file in the LRGS Client
         - name: Modify msgaccess file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_msgaccess }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient/bin/decj'
+            replace: '/surface/LrgsClient/bin/decj'
 
         # modify the rtstat file in the LRGS Client
         - name: Modify rtstat file in LRGS Client
           ansible.builtin.replace:
             path: "{{ lrgs_rtstat }}"
-            regexp: '/api'
-            replace: ''
+            regexp: '.*/surface/api/LrgsClient/bin/decj'
+            replace: '/surface/LrgsClient/bin/decj'
 
         # remove the neccessary files after use
         - name: Remove lrgs install .jar file
@@ -214,26 +215,6 @@
 
 
 
-    # Verify file permissions and ownership
-    - name: Verify file permissions and ownership inside containers
-      block:
-        - name: Verify the data dir
-          # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface /data"
-          ansible.builtin.shell: docker compose exec --user root api bash -c "find /data -exec chown surface {} \;"
-
-          args:
-            chdir: "{{ surface_repo_path }}"
-
-        - name: Verify the surface dir
-          # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface:surface /surface"
-          ansible.builtin.shell: docker compose exec --user root api bash -c "find /surface -exec chown surface:surface {} \;"
-
-          args:
-            chdir: "{{ surface_repo_path }}"
-      become: false
-
-
-
     # Collect Static files and create admin user
     - name: Collect static files and create the SURFACE admin user
       block:
@@ -258,13 +239,32 @@
             project_src: "{{ surface_repo_path }}"
             state: stopped
 
-
         # Starting SURFACE
         - name: Starting up SURFACE
           community.docker.docker_compose_v2:
             project_src: "{{ surface_repo_path }}"
             state: present
 
+        # Verify file permissions and ownership
+        - name: Verify file permissions and ownership inside containers
+          block:
+            - name: Verify the data dir
+              # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface /data"
+              ansible.builtin.shell: |
+                docker compose exec --user root api bash -c "find /data -exec chown surface {} \;"
+
+              args:
+                chdir: "{{ surface_repo_path }}"
+
+            - name: Verify the surface dir
+              # ansible.builtin.shell: docker compose exec --user root api bash -c "chown -R surface:surface /surface"
+              ansible.builtin.shell: docker compose exec --user root api bash -c "find /surface -exec chown surface:surface {} \;"
+
+              args:
+                chdir: "{{ surface_repo_path }}"
+          become: false
+
+        # SUFACE installation complete
         - name: SURFACE installation complete!
           ansible.builtin.pause:
             seconds: 2
