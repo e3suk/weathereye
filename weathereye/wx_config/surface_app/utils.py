@@ -145,6 +145,40 @@ def write_out_production_variables(form):
         prod.write(f'SPATIAL_ANALYSIS_FINAL_LATITUDE={form.cleaned_data["spatial_analysis_final_latitude"]}\n')
         prod.write(f'SPATIAL_ANALYSIS_FINAL_LONGITUDE={form.cleaned_data["spatial_analysis_final_longitude"]}\n')
 
+        # writing a variable called transmit_wis2_regional and transmit_wis2_local if the options are filled in
+        # Check if wis2box_topic_hierarchy has content (after stripping whitespace)
+        topic_hierarchy_entered = bool(form.cleaned_data.get("wis2box_topic_hierarchy", "").strip())
+
+        # Check if regional fields have content (after stripping whitespace)
+        regional_fields_filled = all(
+            form.cleaned_data.get(field, "").strip() for field in ["wis2box_user_regional", "wis2box_password_regional", "wis2box_endpoint_regional"]
+        )
+
+        # Check if local fields have content (after stripping whitespace)
+        local_fields_filled = all(
+            form.cleaned_data.get(field, "").strip() for field in ["wis2box_user_local", "wis2box_password_local", "wis2box_endpoint_local"]
+        )
+
+        # Set enable flags based on conditions
+        enable_wis2box_regional = "true" if topic_hierarchy_entered and regional_fields_filled else "false"
+        enable_wis2box_local = "true" if topic_hierarchy_entered and local_fields_filled else "false"
+
+        # Write to file
+        prod.write(f'\nENABLE_WIS2BOX_REGIONAL={enable_wis2box_regional}\n')
+        prod.write(f'ENABLE_WIS2BOX_LOCAL={enable_wis2box_local}\n')
+
+        # Write other fields
+        prod.write(f'\nWIS2BOX_USER_REGIONAL={form.cleaned_data["wis2box_user_regional"]}\n')
+        prod.write(f'WIS2BOX_PASSWORD_REGIONAL={form.cleaned_data["wis2box_password_regional"]}\n')
+        prod.write(f'WIS2BOX_ENDPOINT_REGIONAL={form.cleaned_data["wis2box_endpoint_regional"]}\n')
+
+        prod.write(f'\nWIS2BOX_USER_LOCAL={form.cleaned_data["wis2box_user_local"]}\n')
+        prod.write(f'WIS2BOX_PASSWORD_LOCAL={form.cleaned_data["wis2box_password_local"]}\n')
+        prod.write(f'WIS2BOX_ENDPOINT_LOCAL={form.cleaned_data["wis2box_endpoint_local"]}\n')
+
+        prod.write(f'\nWIS2BOX_TOPIC_HIERARCHY={form.cleaned_data["wis2box_topic_hierarchy"]}\n')
+
+
 
 def write_out_host_connection_details(form, install_type):
     # write out remote host connection details 

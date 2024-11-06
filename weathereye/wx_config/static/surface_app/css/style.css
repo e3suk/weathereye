@@ -157,6 +157,13 @@ body {
     border-radius: 4px;
     transition: border-color 0.2s ease-in-out;
   }
+
+  .form-half-size {
+    width: 40% !important;
+  }
+  .form-larger-size {
+    width: 60% !important;
+  }
   
   .form-control:focus {
     border-color: #1E90FF;

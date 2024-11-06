@@ -47,6 +47,12 @@
     #lrgs-details {
       display: none; /* Hidden by default */
     }
+    #regional-wis2 {
+      display: none; /* Hidden by default */
+    }
+    #local-wis2 {
+      display: none; /* Hidden by default */
+    }
 
       /* Existing styles */
         /* Toggle switch styling */
@@ -108,6 +114,33 @@
         }
 
     /* LRGS button styling end */
+
+    /* wis2box config styling */
+    .toggle-regional-wis2-container {
+          display: flex; 
+          align-items: center; 
+          justify-content: left;
+          margin-bottom: 10px;
+        }
+
+    .toggle-local-wis2-container {
+          display: flex;
+          margin-left: 20px; 
+          align-items: center; 
+          justify-content: left;
+          margin-bottom: 10px;
+        }
+
+    .toggle-wis2-container {
+      display: flex; 
+      align-items: center; 
+      justify-content: left;
+    }
+
+    #topical-hierarchy-wis2 {
+      margin-top: 40px;
+    }
+    
   </style>
 </head>
 
@@ -135,6 +168,7 @@
           <button class="tablinks">LRGS Details</button>
           <button class="tablinks">Map Details</button>
           <button class="tablinks">Spatial Analysis Details</button>
+          <button class="tablinks">WIS2BOX Setup</button>
           <button class="tablinks">Summary</button>
         </div>
       </div>
@@ -297,6 +331,84 @@
         </div>
 
         <div id="tab5" class="tabcontent">
+          <div class="info-section">
+            <label style="font-size: 20px;">Setup WIS2BOX</label>
+            <p>
+              WIS2 in a Box (wis2box) is a free and open-source tool that serves as a 
+              reference model for a WMO WIS2 Node. It provides an easy-to-use set of tools 
+              to collect, process, and share weather, climate, and water data using standardized 
+              methods aligned with WIS2 principles. Wis2box also allows access to all data within 
+              the WIS2 network and is designed to be accessible for data providers, offering essential 
+              tools and services for data discovery, access, and visualization
+            </p>
+          
+            <p>
+              <strong>Note:</strong> Ensure you have the correct endpoint, username and password. 
+              <!-- You can apply for an LRGS account through the following organizations: -->
+            </p>
+
+            <p style="font-size: smaller;"> <span class="required"></span>These options are NOT required!</p>
+          
+          </div>
+
+          <div class="form-group" id="topical-hierarchy-wis2">
+            <label for="{{ form.wis2box_topic_hierarchy.id_for_label }}">{{ form.wis2box_topic_hierarchy.label }}</label>
+            {{ form.wis2box_topic_hierarchy }}
+          </div>
+
+          <div class="toggle-wis2-container">
+            <!-- The toggle button regional wis2 -->
+            <div class="toggle-regional-wis2-container">
+              <label style="font-size: 20px; margin-right: 10px;">Regional WIS2BOX</label>
+              <label class="switch">
+                <input type="checkbox" id="toggle-regional-wis2">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- The toggle button local wis2 -->
+            <div class="toggle-local-wis2-container">
+              <label style="font-size: 20px; margin-right: 10px;">Local WIS2BOX</label>
+              <label class="switch">
+                <input type="checkbox" id="toggle-local-wis2">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+    
+          <div class="form-group" id="regional-wis2">
+            <label for="{{ form.wis2box_user_regional.id_for_label }}">{{ form.wis2box_user_regional.label }}</label>
+            {{ form.wis2box_user_regional }}
+
+            <label for="{{ form.wis2box_password_regional.id_for_label }}">{{ form.wis2box_password_regional.label }}</label>
+            <div class="password-field">
+              {{ form.wis2box_password_regional }}
+              <span class="password-toggle-icon" style="display: block;"><i class="fas fa-eye"> Show Password</i></span>
+            </div>
+
+            <label for="{{ form.wis2box_endpoint_regional.id_for_label }}">{{ form.wis2box_endpoint_regional.label }}</label>
+            {{ form.wis2box_endpoint_regional }}
+
+            <hr style="border: none; border-top: 3px solid #8e8e8eba; margin: 30px 0; border-radius: 10px; width: 100%;">
+          </div>
+
+          <div class="form-group" id="local-wis2">
+            <label for="{{ form.wis2box_user_local.id_for_label }}">{{ form.wis2box_user_local.label }}</label>
+            {{ form.wis2box_user_local }}
+
+            <label for="{{ form.wis2box_password_local.id_for_label }}">{{ form.wis2box_password_local.label }}</label>
+            <div class="password-field">
+              {{ form.wis2box_password_local }}
+              <span class="password-toggle-icon" style="display: block;"><i class="fas fa-eye"> Show Password</i></span>
+            </div>
+
+            <label for="{{ form.wis2box_endpoint_local.id_for_label }}">{{ form.wis2box_endpoint_local.label }}</label>
+            {{ form.wis2box_endpoint_local }}
+          </div>
+
+        </div>
+
+        <div id="tab6" class="tabcontent">
           <p class="dark-text">If satisfied with the configuration settings, click the 'Save Configuration' button to proceed.</p>
 
           <div class="summary-container">
@@ -377,6 +489,41 @@
               <input type="text" id="summary15" class="summary-input" value="" disabled>
             </div>
 
+            <div class="summary-item">
+              <label for="{{ form.wis2box_topic_hierarchy.id_for_label }}"><span></span>{{ form.wis2box_topic_hierarchy.label }}</label>
+              <input type="text" id="summary16" class="summary-input" value="" disabled>
+            </div>
+            
+            <div class="summary-item">
+              <label for="{{ form.wis2box_user_regional.id_for_label }}"><span></span>{{ form.wis2box_user_regional.label }}</label>
+              <input type="text" id="summary17" class="summary-input" value="" disabled>
+            </div>
+            
+            <div class="summary-item">
+              <label for="{{ form.wis2box_password_regional.id_for_label }}"><span></span>{{ form.wis2box_password_regional.label }}</label>
+              <input type="text" id="summary18" class="summary-input" value="" disabled>
+            </div>
+            
+            <div class="summary-item">
+              <label for="{{ form.wis2box_endpoint_regional.id_for_label }}"><span></span>{{ form.wis2box_endpoint_regional.label }}</label>
+              <input type="text" id="summary19" class="summary-input" value="" disabled>
+            </div>
+            
+            <div class="summary-item">
+              <label for="{{ form.wis2box_user_local.id_for_label }}"><span></span>{{ form.wis2box_user_local.label }}</label>
+              <input type="text" id="summary20" class="summary-input" value="" disabled>
+            </div>
+            
+            <div class="summary-item">
+              <label for="{{ form.wis2box_password_local.id_for_label }}"><span></span>{{ form.wis2box_password_local.label }}</label>
+              <input type="text" id="summary21" class="summary-input" value="" disabled>
+            </div>
+            
+            <div class="summary-item">
+              <label for="{{ form.wis2box_endpoint_local.id_for_label }}"><span></span>{{ form.wis2box_endpoint_local.label }}</label>
+              <input type="text" id="summary22" class="summary-input" value="" disabled>
+            </div>                        
+
           </div>
 
           <p>Note: The form will not allow you to submit unless all required information is entered. Fields beginning with <span class="required"></span> are required and must be filled out!</p>
@@ -426,6 +573,26 @@
         // JavaScript to toggle visibility of the LRGS details div
         document.getElementById("toggle-lrgs").addEventListener("change", function() {
             var detailsDiv = document.getElementById("lrgs-details");
+            if (this.checked) {
+                detailsDiv.style.display = "block";
+            } else {
+                detailsDiv.style.display = "none";
+            }
+        });
+
+        // JavaScript to toggle visibility of the regional wis2 details div
+        document.getElementById("toggle-regional-wis2").addEventListener("change", function() {
+            var detailsDiv = document.getElementById("regional-wis2");
+            if (this.checked) {
+                detailsDiv.style.display = "block";
+            } else {
+                detailsDiv.style.display = "none";
+            }
+        });
+
+        // JavaScript to toggle visibility of the regional wis2 details div
+        document.getElementById("toggle-local-wis2").addEventListener("change", function() {
+            var detailsDiv = document.getElementById("local-wis2");
             if (this.checked) {
                 detailsDiv.style.display = "block";
             } else {
