@@ -225,14 +225,14 @@ if (currentTab == 0) {
 // Get all elements with the ID 'submit-btn'
 var submitBtn = document.getElementById('submitBtn');
 
-if (currentTab == 5) {
+if (currentTab == 6) {
     submitBtn.classList.remove('hide');
 } else {
     submitBtn.classList.add('hide');
 }
 
 // copying form values to the summary page when the user gets to the summary page
-if (currentTab == 5) {
+if (currentTab == 6) {
     const formFields = [{ id: 'surface_repo_path', summaryId: 'summary4' },
                         { id: 'data_path', summaryId: 'summary5' },
                         { id: 'admin', summaryId: 'summary6' },
@@ -244,7 +244,14 @@ if (currentTab == 5) {
                         { id: 'spatial_analysis_initial_latitude', summaryId: 'summary12' },
                         { id: 'spatial_analysis_initial_longitude', summaryId: 'summary13' },
                         { id: 'spatial_analysis_final_latitude', summaryId: 'summary14' },
-                        { id: 'spatial_analysis_final_longitude', summaryId: 'summary15' }
+                        { id: 'spatial_analysis_final_longitude', summaryId: 'summary15' },
+                        { id: 'wis2box_topic_hierarchy', summaryId: 'summary16' },
+                        { id: 'wis2box_user_regional', summaryId: 'summary17' },
+                        { id: 'wis2box_password_regional', summaryId: 'summary18' },
+                        { id: 'wis2box_endpoint_regional', summaryId: 'summary19' },
+                        { id: 'wis2box_user_local', summaryId: 'summary20' },
+                        { id: 'wis2box_password_local', summaryId: 'summary21' },
+                        { id: 'wis2box_endpoint_local', summaryId: 'summary22' }
                     ];
 
     "{% if install_type == 'remote' %}"
