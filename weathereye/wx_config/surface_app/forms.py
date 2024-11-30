@@ -11,7 +11,7 @@ class SurfaceConfigurationForm(forms.Form):
             self.fields['host'] = forms.CharField(
                 label="Remote Host for SURFACE install:", 
                 required=True, 
-                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'eg.. xxx.xx.xxx.xx@username'})
+                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'eg.. username@xxx.xx.xxx.xx'})
             )
             self.fields['surface_repo_path'] = forms.CharField(
                 label="Path on remote machine to clone SURFACE repository:", 
@@ -66,12 +66,12 @@ class SurfaceConfigurationForm(forms.Form):
     # New form fields
     lrgs_user = forms.CharField(
         label="LRGS User:", 
-        required=True, 
+        required=False, 
         widget=forms.TextInput(attrs={'class': 'form-control',})
     )
     lrgs_password = forms.CharField(
         label="LRGS Password:", 
-        required=True, 
+        required=False, 
         widget=forms.PasswordInput(attrs={'class': 'form-control',})
     )
     timezone_name = forms.CharField(
@@ -118,4 +118,76 @@ class SurfaceConfigurationForm(forms.Form):
         label="Spatial Analysis Final Longitude:", 
         required=True, 
         widget=forms.TextInput(attrs={'class': 'form-control disabled-field',})
+    )
+
+    # wis2box options
+    # regional
+    wis2box_user_regional = forms.CharField(
+        label=" Regional WIS2BOX Storage Username:", 
+        required=False, 
+        widget=forms.TextInput(attrs={'class': 'form-control',})
+    )
+    wis2box_password_regional = forms.CharField(
+        label="Regional WIS2BOX Storage Password:", 
+        required=False, 
+        widget=forms.PasswordInput(attrs={'class': 'form-control',})
+    )
+    wis2box_endpoint_regional = forms.CharField(
+        label="Regional Endpoint:", 
+        required=False, 
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'eg.. xxx.xx.xxx.xx:port#'})
+    )
+
+    # local
+    wis2box_user_local = forms.CharField(
+        label="Local WIS2BOX Storage Username:", 
+        required=False, 
+        widget=forms.TextInput(attrs={'class': 'form-control',})
+    )
+    wis2box_password_local = forms.CharField(
+        label="Local WIS2BOX Storage Password:", 
+        required=False, 
+        widget=forms.PasswordInput(attrs={'class': 'form-control',})
+    )
+    wis2box_endpoint_local = forms.CharField(
+        label="Local Endpoint:", 
+        required=False, 
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'eg.. xxx.xx.xxx.xx:port#'})
+    )
+
+    # wis2box_topic_hierarchy = forms.CharField(
+    #     label="Topic Hierarchy:", 
+    #     required=False, 
+    #     widget=forms.TextInput(attrs={'class': 'form-control form-larger-size',})
+    # )
+
+    # Define the list of options as choices
+    TOPIC_HIERARCHY_CHOICES = [
+        ('', '--------'),
+        ('origin/a/wis2/ag-antiguamet/data/core/weather/surface-based-observations/synop', 'Antigua (ag-antiguamet)'),
+        ('origin/a/wis2/ky-cinws/data/core/weather/surface-based-observations/synop', 'Cayman Islands (ky-cinws)'),
+        ('origin/a/wis2/dm-dms/data/core/weather/surface-based-observations/synop', 'Dominica (dm-dms)'),
+        ('origin/a/wis2/gd-metservice/data/core/weather/surface-based-observations/synop', 'Grenada (gd-metservice)'),
+        ('origin/a/wis2/gy-hydromet/data/core/weather/surface-based-observations/synop', 'Guyana (gy-hydromet)'),
+        ('origin/a/wis2/kn-metservice/data/core/weather/surface-based-observations/synop', 'St. Kitts and Nevis (kn-metservice)'),
+        ('origin/a/wis2/sx-metservice/data/core/weather/surface-based-observations/synop', 'Sint Maarten (sx-metservice)'),
+        ('origin/a/wis2/tc-metservice/data/core/weather/surface-based-observations/synop', 'Turks and Caicos (tc-metservice)'),
+        ('origin/a/wis2/lc-metservice/data/core/weather/surface-based-observations/synop', 'Saint Lucia (lc-metservice)'),
+        ('origin/a/wis2/tt-trin-met/data/core/weather/surface-based-observations/synop', 'Trinidad and Tobago (tt-trin-met)'),
+        ('origin/a/wis2/vc-metservice/data/core/weather/surface-based-observations/synop', 'Saint Vincent (vc-metservice)'),
+        ('origin/a/wis2/ai-metservice/data/core/weather/surface-based-observations/synop', 'Anguilla (ai-metservice)'),
+        ('origin/a/wis2/jm-msj/data/core/weather/surface-based-observations/synop', 'Jamaica (jm-msj)'),
+        ('origin/a/wis2/bz-nms/data/core/weather/surface-based-observations/synop', 'Belize (bz-nms)'),
+        ('origin/a/wis2/bs-metservice/data/core/weather/surface-based-observations/synop', 'Bahamas (bs-metservice)'),
+        ('origin/a/wis2/ms-metservice/data/core/weather/surface-based-observations/synop', 'Montserrat (ms-metservice)'),
+        ('origin/a/wis2/vg-metservice/data/core/weather/surface-based-observations/synop', 'British Virgin Islands (vg-metservice)')
+    ]
+
+    # The hierarchy
+    # Make wis2box_topic_hierarchy a dropdown
+    wis2box_topic_hierarchy = forms.ChoiceField(
+        label="Topic Hierarchy:",
+        choices=TOPIC_HIERARCHY_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control form-larger-size'})
     )
